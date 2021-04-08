@@ -5,7 +5,9 @@ from api.models import User, Title, Category, Genre, Review, Comment
 
 @admin.register(User)
 class UserAdmin(admin.ModelAdmin):
-    list_display = ('id', 'first_name', 'last_name', 'username', 'bio', 'email', 'role')
+    list_display = ('id', 'first_name',
+                    'last_name', 'username',
+                    'bio', 'email', 'role')
     empty_value_display = '-пусто-'
 
 
