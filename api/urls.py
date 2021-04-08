@@ -1,35 +1,23 @@
-from django.urls import include, path
+from django.urls import path, include
 from rest_framework.routers import DefaultRouter
 
 from .views import (
-    CategoryViewSet,
-    CommentViewSet,
-    GenreViewSet,
-    ReviewViewSet,
-    TitleViewSet,
-    UserViewSet,
-    get_confirmation_code,
-    get_jwt_token
+    UserViewSet, EmailSignUpView, CodeConfirmView, MeProfileView, GenreListCreteDestroyView,
+    CategoryListCreteDestroyView, TitleViewSet, CommentViewSet, ReviewViewSet
 )
 
 
 router = DefaultRouter()
-
-
-router.register('categories', CategoryViewSet)
-router.register('genres', GenreViewSet)
-router.register('titles', TitleViewSet)
-router.register(
-    r'titles/(?P<title>\d+)/reviews', ReviewViewSet, basename='reviews'
-)
-router.register(
-    r'titles/(?P<title_id>\d+)/reviews/(?P<review_id>\d+)/comments',
-    CommentViewSet, basename='comment'
-)
 router.register('users', UserViewSet)
+router.register('titles', TitleViewSet)
+router.register('genres', GenreListCreteDestroyView)
+router.register('categories', CategoryListCreteDestroyView)
+router.register(r'titles/(?P<title_id>\d+)/reviews/(?P<review_id>\d+)/comments', CommentViewSet)
+router.register(r'titles/(?P<title_id>\d+)/reviews', ReviewViewSet)
 
 urlpatterns = [
+    path('users/me/', MeProfileView.as_view()),
     path('', include(router.urls)),
-    path('auth/email/', get_confirmation_code),
-    path('auth/token/', get_jwt_token),
+    path('auth/token/', CodeConfirmView.as_view()),
+    path('auth/email/', EmailSignUpView.as_view()),
 ]
