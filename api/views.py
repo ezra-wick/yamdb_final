@@ -55,7 +55,7 @@ class EmailSignUpView(APIView):
                 fail_silently=True,
             )
             return Response({
-                'result':'Код подтверждения отправлен на почту {}'.format(
+                'result': 'Код подтверждения отправлен на почту {}'.format(
                     code)},
                 status=200)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
