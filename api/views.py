@@ -126,22 +126,18 @@ class TitleViewSet(viewsets.ModelViewSet):
     def perform_create(self, serializer):
         serializer.save(
             genre=Genre.objects.filter(
-                slug__in=self.request.data.getlist('genre')
-                ),
+                slug__in=self.request.data.getlist('genre')),
             category=Category.objects.get(
-                slug=self.request.data.get('category')
-                )
+                slug=self.request.data.get('category'))
         )
 
     def perform_update(self, serializer):
         serializer.save(
             genre=Genre.objects.filter(
-                slug__in=self.request.data.getlist('genre')
-                ),
+                slug__in=self.request.data.getlist('genre')),
             category=get_object_or_404(
                 Category,
-                slug=self.request.data.get('category')
-                )
+                slug=self.request.data.get('category'))
         )
 
 
@@ -159,8 +155,7 @@ class ReviewViewSet(viewsets.ModelViewSet):
         title = get_object_or_404(Title, pk=self.kwargs.get('title_id'))
         if Review.objects.filter(
             author=self.request.user,
-            title_id=title
-            ).exists():
+            title_id=title).exists():
             raise exceptions.ValidationError('Вы уже поставили оценку')
         serializer.save(author=self.request.user, title_id=title)
         title.update_rating()
