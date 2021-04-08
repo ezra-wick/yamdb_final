@@ -55,8 +55,7 @@ class EmailSignUpView(APIView):
                 fail_silently=True,
             )
             return Response({
-                'result': 'Код подтверждения отправлен на вашу почту {}' \
-                .format(code)},
+                'result': 'Код подтверждения отправлен на почту {}'.format(code)},
                 status=200)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
@@ -154,8 +153,9 @@ class ReviewViewSet(viewsets.ModelViewSet):
 
     def perform_create(self, serializer):
         title = get_object_or_404(Title, pk=self.kwargs.get('title_id'))
-        if Review.objects.filter( \
-            author=self.request.user, title_id=title).exists():
+        if Review.objects.filter(author=self.request.user,
+                                 title_id=title) \
+                                 .exists():
             raise exceptions.ValidationError('Вы уже поставили оценку')
         serializer.save(author=self.request.user, title_id=title)
         title.update_rating()
