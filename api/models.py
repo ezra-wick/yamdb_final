@@ -30,7 +30,7 @@ class Genre(models.Model):
     slug = models.SlugField(unique=True)
 
     def __str__(self):
-        return self.name    
+        return self.name
 
 
 class Title(models.Model):
@@ -38,7 +38,7 @@ class Title(models.Model):
     year = models.IntegerField(null=True, blank=True)
     genre = models.ManyToManyField(Genre, blank=True, related_name='titles')
     category = models.ForeignKey(
-        Category, null=True, blank=True, 
+        Category, null=True, blank=True,
         on_delete=models.SET_NULL, related_name='titles'
     )
     description = models.TextField(blank=True)
@@ -76,7 +76,7 @@ class Comment(models.Model):
     )
     pub_date = models.DateTimeField(
         'comment pub date', auto_now_add=True, db_index=True
-    ) 
+    )
 
     def __str__(self):
         return self.text

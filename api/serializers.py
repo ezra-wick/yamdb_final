@@ -1,63 +1,84 @@
 from rest_framework import serializers
 
-from api.models import User, Genre, Category, Title, Comment, Review
+from .models import Category, Comment, Genre, Review, Title, User
 
 
 class UserSerializer(serializers.ModelSerializer):
-
     class Meta:
-        fields = ('username', 'id', 'first_name', 'last_name', 'email', 'role', 'bio')
         model = User
+        fields = ('id', 'username', 'role', 'email', 'first_name', 'last_name', 'bio')
 
 
-class TokenSerializer(serializers.Serializer):
+class UserEmailSerializer(serializers.Serializer):
     email = serializers.EmailField(required=True)
-    code = serializers.CharField(required=True)
+    username = serializers.CharField(required=True)
 
 
-class SignUpSerializer(serializers.ModelSerializer):
-
-    class Meta:
-        model = User
-        fields = ('email',)
-
-
-class GenreSerializer(serializers.ModelSerializer):
-
-    class Meta:
-        model = Genre
-        fields = ('name', 'slug')
+class ConfirmationCodeSerializer(serializers.Serializer):
+    email = serializers.EmailField(required=True)
+    confirmation_code = serializers.CharField(required=True)
 
 
 class CategorySerializer(serializers.ModelSerializer):
 
     class Meta:
+        fields = ('name', 'slug') 
         model = Category
-        fields = ('name', 'slug')
 
 
-class TitleSerializer(serializers.ModelSerializer):
-    genre = GenreSerializer(many=True, read_only=True)
-    category = CategorySerializer(read_only=True)
+class GenreSerializer(serializers.ModelSerializer):
 
     class Meta:
-        model = Title
+        fields = ('name', 'slug') 
+        model = Genre
+
+
+class TitleCreateSerializer(serializers.ModelSerializer):
+    genre = serializers.SlugRelatedField(slug_field='slug', many=True, queryset=Genre.objects.all())
+    category = serializers.SlugRelatedField(slug_field='slug', queryset=Category.objects.all())
+
+    class Meta:
         fields = '__all__'
+        model = Title
 
 
-class CommentSerializer(serializers.ModelSerializer):
-    author = serializers.ReadOnlyField(source='author.username')
+class TitleListSerializer(serializers.ModelSerializer):
+    genre = GenreSerializer(many=True)
+    category = CategorySerializer()
+    rating = serializers.FloatField()
 
     class Meta:
-        model = Comment
-        fields = ('id', 'text', 'author', 'pub_date')
+        fields = ('id', 'name', 'year', 'genre', 'rating', 'category', 'description')
+        model = Title
 
 
 class ReviewSerializer(serializers.ModelSerializer):
-    author = serializers.ReadOnlyField(source='author.username')
-    title_id = serializers.ReadOnlyField(source='title.pk')
-    score = serializers.IntegerField(min_value=1, max_value=10)
+    author = serializers.StringRelatedField()
+
+    def validate(self, attrs):
+        request = self.context['request']
+        if request.method != 'POST':
+            return attrs
+
+        title = Title.objects.filter(pk=self.context['view'].kwargs.get('title')).exists()
+        if not title:
+            return attrs
+
+        title = Title.objects.get(pk=self.context['view'].kwargs.get('title'))
+        exist = Review.objects.filter(author=request.user).filter(title=title).exists()
+        if exist:
+            raise serializers.ValidationError('One user can make only one review per title.')
+        
+        return attrs
 
     class Meta:
+        fields = ('id', 'title_id', 'text', 'author', 'score', 'pub_date')
         model = Review
-        fields = '__all__'
+        
+
+class CommentSerializer(serializers.ModelSerializer):
+    author = serializers.StringRelatedField()
+
+    class Meta:
+        fields = ('id', 'review_id', 'text', 'author', 'pub_date')
+        model = Comment
