@@ -1,0 +1,31 @@
+
+version: '3.9'
+volumes:
+  postgres_data:
+  static:
+services:
+  db:
+    image: postgres:12.4
+    volumes:
+      - postgres_data:/var/lib/postgresql/data/
+    env_file:
+      - ./.env
+  web:
+    build: .
+    restart: always
+    command: gunicorn api_yamdb.wsgi:application --bind 0.0.0.0:8000
+    ports:
+      - "8000:8000"
+    depends_on:
+      - db
+    env_file:
+      - ./.env
+  nginx:
+    build: ./nginx
+    restart: unless-stopped
+    volumes:
+      - static:/static
+    ports:
+      - 80:80
+    depends_on:
+      - web
