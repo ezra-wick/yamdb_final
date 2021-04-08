@@ -1,4 +1,6 @@
-from rest_framework import viewsets, filters, exceptions, permissions, status, generics, mixins
+from rest_framework import (viewsets, filters,
+                            exceptions, permissions,
+                            status, generics, mixins)
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from django_filters.rest_framework import DjangoFilterBackend
@@ -11,7 +13,9 @@ from api.serializers import (UserSerializer, TokenSerializer,
                              SignUpSerializer, GenreSerializer,
                              CategorySerializer, TitleSerializer,
                              CommentSerializer, ReviewSerializer)
-from api.permissions import IsAdmin, IsAdminOrReadOnly, IsStaffOrOwnerOrReadOnly
+from api.permissions import (IsAdmin,
+                            IsAdminOrReadOnly,
+                            IsStaffOrOwnerOrReadOnly)
 from api.filters import TitleFilter
 import uuid
 
@@ -50,7 +54,9 @@ class EmailSignUpView(APIView):
                 [email],
                 fail_silently=True,
             )
-            return Response({'result': 'Код подтверждения отправлен на вашу почту {}'.format(code)}, status=200)
+            return Response(
+                {'result': 'Код подтверждения отправлен на вашу почту {}'.format(code)},
+                status=200)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
@@ -112,27 +118,38 @@ class TitleViewSet(viewsets.ModelViewSet):
     queryset = Title.objects.all()
     serializer_class = TitleSerializer
 
-    permission_classes = [permissions.IsAuthenticatedOrReadOnly, IsAdminOrReadOnly]
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly,
+                          IsAdminOrReadOnly]
     filter_backends = (DjangoFilterBackend,)
     filterset_class = TitleFilter
 
     def perform_create(self, serializer):
         serializer.save(
-            genre=Genre.objects.filter(slug__in=self.request.data.getlist('genre')),
-            category=Category.objects.get(slug=self.request.data.get('category'))
+            genre=Genre.objects.filter(
+                slug__in=self.request.data.getlist('genre')
+                ),
+            category=Category.objects.get(
+                slug=self.request.data.get('category')
+                )
         )
 
     def perform_update(self, serializer):
         serializer.save(
-            genre=Genre.objects.filter(slug__in=self.request.data.getlist('genre')),
-            category=get_object_or_404(Category, slug=self.request.data.get('category'))
+            genre=Genre.objects.filter(
+                slug__in=self.request.data.getlist('genre')
+                ),
+            category=get_object_or_404(
+                Category,
+                slug=self.request.data.get('category')
+                )
         )
 
 
 class ReviewViewSet(viewsets.ModelViewSet):
     queryset = Review.objects.all()
     serializer_class = ReviewSerializer
-    permission_classes = [permissions.IsAuthenticatedOrReadOnly, IsStaffOrOwnerOrReadOnly]
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly,
+                          IsStaffOrOwnerOrReadOnly]
 
     def get_queryset(self):
         queryset = self.queryset
@@ -140,7 +157,10 @@ class ReviewViewSet(viewsets.ModelViewSet):
 
     def perform_create(self, serializer):
         title = get_object_or_404(Title, pk=self.kwargs.get('title_id'))
-        if Review.objects.filter(author=self.request.user, title_id=title).exists():
+        if Review.objects.filter(
+            author=self.request.user,
+            title_id=title
+            ).exists():
             raise exceptions.ValidationError('Вы уже поставили оценку')
         serializer.save(author=self.request.user, title_id=title)
         title.update_rating()
@@ -159,7 +179,8 @@ class ReviewViewSet(viewsets.ModelViewSet):
 class CommentViewSet(viewsets.ModelViewSet):
     queryset = Comment.objects.all()
     serializer_class = CommentSerializer
-    permission_classes = [permissions.IsAuthenticatedOrReadOnly, IsStaffOrOwnerOrReadOnly]
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly,
+                          IsStaffOrOwnerOrReadOnly]
 
     def get_queryset(self):
         queryset = self.queryset
