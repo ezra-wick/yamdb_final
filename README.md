@@ -44,4 +44,4 @@ docker-compose down
 docker stop $(docker ps -a -q)
 docker rm $(docker ps -a -q)
 ```
-![yamdb_final workflow](https://github.com/ezra-wick/yamdb_final/yamdb_workflow.yaml/badge.svg)
+![yamdb_final workflow](https://github.com/ezra-wick/yamdb_final/workflows/yamdb_final%20workflow/badge.svg)
