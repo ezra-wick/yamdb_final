@@ -6,7 +6,9 @@ from api.models import User, Genre, Category, Title, Comment, Review
 class UserSerializer(serializers.ModelSerializer):
 
     class Meta:
-        fields = ('username', 'id', 'first_name', 'last_name', 'email', 'role', 'bio')
+        fields = ('username', 'id',
+                  'first_name', 'last_name',
+                  'email', 'role', 'bio')
         model = User
 
 
