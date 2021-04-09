@@ -55,10 +55,6 @@ jobs:
        key: ${{ secrets.SSH_KEY }}
        passphrase: ${{ secrets.PASSPHRASE }}
        script: |
-         sudo curl -sSL https://get.docker.com/ | sh
-         sudo apt-get update && apt-get upgrade
-         sudo apt-get install docker.io
-         sudo docker pull ezrawick/infra-sp2
          sudo docker-compose up
   send_message:
     runs-on: ubuntu-latest
