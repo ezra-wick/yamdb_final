@@ -12,6 +12,7 @@ services:
       - ./.env
   web:
     image: ezrawick/infra-sp2:latest
+    command: gunicorn api_yamdb.wsgi:application --bind 0.0.0.0:8000
     restart: always
     depends_on:
       - db
