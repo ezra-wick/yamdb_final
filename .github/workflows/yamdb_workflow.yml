@@ -57,9 +57,8 @@ jobs:
        script: |
          sudo curl -sSL https://get.docker.com/ | sh
          sudo apt-get update && apt-get upgrade
-         curl -L "https://github.com/docker/compose/releases/download/1.29.0/docker-compose-$(uname -s)-$(uname -m)" > ./docker-compose
-         sudo mv ./docker-compose /usr/bin/docker-compose
-         sudo chmod +x /usr/bin/docker-compose
+         sudo curl -L https://github.com/docker/compose/releases/download/1.29.0/docker-compose-`uname -s`-`uname -m` -o /usr/local/bin/docker-compose
+         sudo chmod +x /usr/local/bin/docker-compose
          sudo docker-compose pull ezrawick/infra-sp2:latest
          sudo docker-compose stop $(sudo docker ps -a -q)
          sudo docker-compose run --rm -d -p 5000:5000 ezrawick/infra-sp2:latest
