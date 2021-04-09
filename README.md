@@ -44,5 +44,9 @@ docker-compose down
 docker stop $(docker ps -a -q)
 docker rm $(docker ps -a -q)
 ```
+## Посмотреть проект.
+```
+http://178.154.200.106:8000/
+```
 ![yamdb_final workflow](https://github.com/ezra-wick/yamdb_final/actions/workflows/yamdb_workflow.yml/badge.svg)
 
