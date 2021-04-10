@@ -1,5 +1,4 @@
 FROM python:3.9
 WORKDIR /code
 COPY . .
-RUN pip install -r /code/requirements.txt \
-    && python3 manage.py collectstatic --noinput
+RUN pip install -r /code/requirements.txt 
