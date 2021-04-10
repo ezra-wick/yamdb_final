@@ -46,7 +46,7 @@ docker rm $(docker ps -a -q)
 ```
 ## Посмотреть проект.
 ```
-http://178.154.200.106:8000/
+http://84.201.175.133/admin
 ```
 ![yamdb_final workflow](https://github.com/ezra-wick/yamdb_final/actions/workflows/yamdb_workflow.yml/badge.svg)
 
