@@ -48,5 +48,5 @@ docker rm $(docker ps -a -q)
 ```
 http://84.201.175.133/admin
 ```
-![yamdb_final workflow](https://github.com/ezra-wick/yamdb_final/actions/workflows/yamdb_workflow.yml/badge.svg)
+![yamdb_final workflow](https://github.com/ezra-wick/yamdb_final/actions/workflows/yamdb_workflow.yaml/badge.svg)
 
