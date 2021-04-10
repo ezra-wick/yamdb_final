@@ -12,7 +12,6 @@ services:
       - ./.env
   web:
     image: ezrawick/infra-sp2:latest
-    command: sh -c "python manage.py migrate && gunicorn api_yamdb.wsgi:application --bind 0.0.0.0:8000"
     restart: always
     depends_on:
       - db
@@ -22,8 +21,8 @@ services:
     build: ./nginx
     restart: unless-stopped
     volumes:
+      - ./nginx/default.conf:/etc/nginx/conf.d/default.conf
       - static:/static
-      - ./nginx/nginx.conf:/etc/nginx/nginx.conf
     ports:
       - 80:80
     depends_on:
