@@ -71,6 +71,8 @@ jobs:
           sudo apt-get update -y
           sudo apt-get remove docker docker-engine docker.io -y
           sudo apt install docker.io docker-compose -y
+          sudo systemctl enable docker.service
+          sudo systemctl enable containerd.service
           sudo systemctl start docker
           sudo systemctl enable docker
           cd ~/code/
