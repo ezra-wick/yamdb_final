@@ -14,7 +14,7 @@ services:
   web:
     image: ezrawick/infra-sp2
     restart: always
-    command: sh -c "python manage.py collectstatic --noinput && gunicorn api_yamdb.wsgi:application --bind 0.0.0.0:8000"
+    command: manage.py collectstatic && gunicorn api_yamdb.wsgi:application --bind 0.0.0.0:8000
     depends_on:
       - db
     volumes:
