@@ -24,6 +24,7 @@ services:
     env_file:
       - ./.env
   nginx:
+    # Статика никак не загрузится, не знаю что делать(((
     image: nginx:latest
     restart: always
     volumes:
