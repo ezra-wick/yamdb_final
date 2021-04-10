@@ -14,8 +14,7 @@ services:
   web:
     image: ezrawick/infra-sp2
     restart: always
-    command: bash -c "./manage.py collectstatic --noinput;
-             /usr/local/bin/gunicorn api_yamdb.wsgi:application --bind 0.0.0.0:8000 --reload"
+    command: gunicorn api_yamdb.wsgi:application --bind 0.0.0.0:8000
     depends_on:
       - db
     volumes:
@@ -25,7 +24,7 @@ services:
     env_file:
       - ./.env
   nginx:
-    image: nginx:1.19.6
+    image: nginx:latest
     restart: always
     volumes:
       - ./nginx/default.conf:/etc/nginx/conf.d/default.conf
