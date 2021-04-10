@@ -14,10 +14,13 @@ services:
   web:
     image: ezrawick/infra-sp2
     restart: always
-    ports:
-      - "8000:8000"
+    command: bash -c "python manage.py collectstatic --no-input && python manage.py makemigrations && python manage.py migrate && gunicorn api_yamdb.wsgi:application --bind 0.0.0.0:8000"
     depends_on:
       - db
+    volumes:
+      - /static:/static
+    expose:
+      - "8000"
     env_file:
       - ./.env
   nginx:
