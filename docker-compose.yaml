@@ -1,8 +1,9 @@
-
-version: '3.9'
+ 
+version: '3.7'
 volumes:
   postgres_data:
   static:
+
 services:
   db:
     image: postgres:12.4
@@ -11,19 +12,19 @@ services:
     env_file:
       - ./.env
   web:
-    image: ezrawick/infra-sp2:latest
+    image: ezrawick/yamdb_final
     restart: always
     depends_on:
       - db
     env_file:
       - ./.env
   nginx:
-    build: ./nginx
-    restart: unless-stopped
+    image: nginx:1.19.6
+    restart: always
     volumes:
       - ./nginx/default.conf:/etc/nginx/conf.d/default.conf
-      - static:/static
+      - ./static:/static/
     ports:
-      - 80:80
+      - "80:80"
     depends_on:
       - web
